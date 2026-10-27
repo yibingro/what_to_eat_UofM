@@ -1,0 +1,3590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>今天密校吃什么</title>
+<style>
+  :root{
+    --um-blue: #00274C;
+    --um-maize: #FFCB05;
+    --bg: var(--um-blue);
+    --box-bg: #001a33;
+    --box-border: #0a3a63;
+    --text: #eaf1f8;
+    --meal-brown: #9A3324;
+    --cool-white: 226, 238, 255;
+    --gap: 28px;
+    --box-pad: 26px;
+  }
+  *{ box-sizing: border-box; }
+  html{ height: 100%; }
+  body{
+    min-height: 100%;
+    margin: 0;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #0a3a63 0%, var(--bg) 62%),
+      var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 82px 16px 56px;
+    transition: background .6s ease;
+  }
+
+  body.over-budget{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #4a1810 0%, #250a06 62%),
+      #250a06;
+  }
+
+  .stack{
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* ========== 顶部横幅（全宽固定，无圆角，囊括 ID + 规则 + 设置） ========== */
+  .banner{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 900;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid var(--box-border);
+    background: var(--box-bg);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .06),
+      0 4px 14px rgba(0, 0, 0, .24);
+    transition: background .5s ease, border-color .5s ease;
+  }
+  body.over-budget .banner{
+    border-bottom-color: rgba(180, 80, 60, .40);
+    background: #2a0f0a;
+  }
+
+  .top-bar{
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .user-id{
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(234, 241, 248, .88);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%;
+    text-decoration: underline transparent;
+    text-underline-offset: 3px;
+    transition: background .2s ease, color .5s ease, text-decoration-color .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .user-id:hover{
+    background: rgba(226, 238, 255, .08);
+    text-decoration-color: currentColor;
+  }
+  body.over-budget .user-id{ color: #ff9b7d; }
+
+  .top-buttons{
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .top-btn{
+    appearance: none;
+    padding: 7px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--box-border);
+    background: var(--box-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease, color .5s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-btn:hover{
+    background: #002a4a;
+    border-color: #0f4a7a;
+  }
+  body.over-budget .top-btn{
+    border-color: rgba(180, 80, 60, .4);
+    background: #2a0f0a;
+    color: #ff9b7d;
+  }
+  body.over-budget .top-btn:hover{
+    background: #3a1610;
+    border-color: rgba(200, 100, 80, .55);
+  }
+
+  /* ---------- 标题 ---------- */
+  .title-wrap{
+    width: 80%;
+    margin: 12px auto 4px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page-title{
+    margin: 0;
+    font-size: clamp(24px, 6.2vw, 38px);
+    font-weight: 900;
+    line-height: 1.35;
+    color: var(--um-maize);
+    text-align: center;
+    text-shadow:
+      0 0 26px rgba(255, 203, 5, .32),
+      0 2px 0 rgba(0, 0, 0, .28);
+    transition: color .5s ease, text-shadow .5s ease;
+  }
+  .page-title span{
+    display: inline-block;
+    letter-spacing: .24em;
+    padding-left: .24em;
+  }
+
+  body.over-budget .page-title{
+    color: #ff9b7d;
+    text-shadow:
+      0 0 26px rgba(255, 120, 90, .42),
+      0 2px 0 rgba(0, 0, 0, .35);
+  }
+
+  /* ---------- 收起汇总容器 ---------- */
+  .collapsed-summary{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--box-border);
+    background: var(--box-bg);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .06),
+      inset 0 5px 16px rgba(0, 0, 0, .44),
+      0 4px 14px rgba(0, 0, 0, .24);
+    transition: background .5s ease, border-color .5s ease;
+  }
+  .collapsed-summary[hidden]{ display: none; }
+
+  .summary-item{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .summary-label{
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    color: rgba(200, 214, 230, .72);
+    white-space: nowrap;
+    transition: color .5s ease;
+  }
+
+  .summary-value{
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--um-maize);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    transition: color .5s ease, text-decoration-color .2s ease;
+  }
+
+  /* 可点击的彩蛋卡片名 */
+  .summary-value.clickable{
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(255, 203, 5, .42);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .summary-value.clickable:hover{
+    text-decoration-color: currentColor;
+  }
+
+  body.over-budget .collapsed-summary{
+    border-color: rgba(180, 80, 60, .40);
+    background: #2a0f0a;
+  }
+  body.over-budget .summary-label{ color: rgba(255, 150, 130, .85); }
+  body.over-budget .summary-value{ color: #ff9b7d; }
+  body.over-budget .summary-value.clickable{
+    text-decoration-color: rgba(255, 155, 125, .42);
+  }
+  body.over-budget .summary-value.clickable:hover{
+    text-decoration-color: currentColor;
+  }
+
+  /* ---------- 收起横幅 ---------- */
+  .collapse-banner{
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--box-border);
+    background: var(--box-bg);
+    color: var(--um-maize);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .06),
+      inset 0 5px 16px rgba(0, 0, 0, .44),
+      0 4px 14px rgba(0, 0, 0, .24);
+    transition: background .5s ease, border-color .5s ease, color .5s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .collapse-banner:hover{
+    background: #002a4a;
+    border-color: #0f4a7a;
+  }
+  body.over-budget .collapse-banner{
+    border-color: rgba(180, 80, 60, .40);
+    background: #2a0f0a;
+    color: #ff9b7d;
+  }
+  body.over-budget .collapse-banner:hover{
+    background: #3a1610;
+    border-color: rgba(200, 100, 80, .55);
+  }
+  .collapse-banner[hidden]{ display: none; }
+
+  .box.collapsed{ display: none !important; }
+
+  /* ---------- 通用 box ---------- */
+  .box{
+    background: var(--box-bg);
+    border: 1px solid var(--box-border);
+    border-radius: 20px;
+    padding: var(--box-pad) 18px;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .06),
+      inset 0 5px 16px rgba(0, 0, 0, .44),
+      inset 0 -4px 12px rgba(0, 0, 0, .30),
+      inset 4px 0 10px rgba(0, 0, 0, .18),
+      inset -4px 0 10px rgba(0, 0, 0, .18),
+      0 4px 14px rgba(0, 0, 0, .24);
+    transition: border-color .5s ease, background .5s ease;
+  }
+
+  body.over-budget .box{
+    border-color: rgba(180, 80, 60, .40);
+    background: #2a0f0a;
+  }
+
+  .box[hidden]{ display: none; }
+  .box.reveal-in{
+    animation: box-in .6s cubic-bezier(.3, 1, .4, 1) both;
+  }
+  @keyframes box-in{
+    from{ opacity: 0; transform: translateY(-16px) scale(.97); }
+    to  { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ---------- 6 个骰子 ---------- */
+  .dice-grid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    justify-items: center;
+    margin-bottom: var(--gap);
+    padding-right: 16px;
+    flex: 0 0 auto;
+  }
+
+  .die{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 74px;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .55));
+    transform-origin: center;
+    transition: transform .18s ease;
+  }
+  .die.rolling{ transform: scale(.96) rotate(-1deg); }
+  .die.pop{ animation: pop .32s cubic-bezier(.3, 1.6, .5, 1); }
+  @keyframes pop{
+    0%{ transform: scale(1); }
+    45%{ transform: scale(1.1); }
+    100%{ transform: scale(1); }
+  }
+
+  .die-shape{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .die-shape polygon{
+    stroke: rgba(255,203,5,.20);
+    stroke-width: 1.2;
+    stroke-linejoin: round;
+  }
+  .face-front{ fill: #0b3a63; }
+  .face-top{ fill: #12507f; }
+  .face-side{ fill: #072a4a; }
+
+  .die-value{
+    position: absolute;
+    left: 50%;
+    top: 65%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--um-maize);
+    text-shadow: 0 0 12px rgba(255, 203, 5, .30);
+    user-select: none;
+    pointer-events: none;
+    line-height: 1;
+    transition: color .15s ease;
+  }
+
+  /* ---------- 金属按钮 ---------- */
+  .roll-btn,
+  .random-btn,
+  .add-btn{
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    padding: 15px 46px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--um-blue);
+    background: linear-gradient(135deg,
+      #fffdf0 0%,
+      #fff4b8 12%,
+      #ffe97a 30%,
+      #ffcb05 52%,
+      #d9a400 76%,
+      #9e7200 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.90),
+      inset 0 -2px 6px rgba(90,60,0,.50),
+      inset 0 0 0 1px rgba(255,236,150,.55),
+      0 6px 18px rgba(255,203,5,.28);
+    transition:
+      transform .12s ease,
+      box-shadow .2s ease,
+      background .25s ease,
+      color .25s ease;
+    flex: 0 0 auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .roll-btn::after,
+  .random-btn::after,
+  .add-btn::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at var(--mx, 30%) var(--my, 30%),
+      rgba(255,255,255,.90) 0%,
+      rgba(255,255,255,.48) 18%,
+      rgba(255,245,200,.20) 38%,
+      rgba(255,255,255,0) 62%);
+    opacity: 0;
+    transition: opacity .35s ease;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: screen;
+  }
+  .roll-btn:hover::after,
+  .random-btn:hover::after,
+  .add-btn:hover::after{ opacity: 1; }
+  .roll-btn:not(:hover)::after,
+  .random-btn:not(:hover)::after,
+  .add-btn:not(:hover)::after{ transition: opacity .14s ease; }
+
+  .btn-label{ position: relative; z-index: 1; }
+
+  .roll-btn:hover,
+  .random-btn:hover,
+  .add-btn:hover{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.95),
+      inset 0 -2px 6px rgba(90,60,0,.55),
+      inset 0 0 0 1px rgba(255,240,170,.70),
+      0 8px 22px rgba(255,203,5,.34);
+  }
+  .roll-btn:active,
+  .random-btn:active,
+  .add-btn:active{
+    transform: translateY(1px) scale(.985);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.80),
+      inset 0 -1px 3px rgba(90,60,0,.55),
+      0 3px 10px rgba(255,203,5,.24);
+  }
+
+  .roll-btn:disabled,
+  .roll-btn.used,
+  .random-btn:disabled{
+    cursor: default;
+    pointer-events: none;
+    color: #8b95a5;
+    background: linear-gradient(135deg, #454f5e 0%, #2e3743 100%);
+    box-shadow: none;
+    transform: none;
+  }
+  .roll-btn:disabled::after,
+  .roll-btn.used::after,
+  .random-btn:disabled::after{ display: none; }
+
+  /* ---------- 经费气泡 ---------- */
+  .bubble-wrap{
+    width: 100%;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .38s cubic-bezier(.3, 1, .4, 1);
+    flex: 0 0 auto;
+  }
+  .bubble-wrap.open{ grid-template-rows: 1fr; }
+  .bubble-inner{ overflow: hidden; min-height: 0; }
+
+  .bubble-row{
+    width: 100%;
+    display: flex;
+    padding-top: var(--gap);
+  }
+  .bubble-row-left{
+    justify-content: flex-start;
+    padding-left: 10px;
+  }
+
+  .bubble{
+    position: relative;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.5;
+    padding: 11px 18px;
+    border-radius: 14px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .bubble-left{
+    background: linear-gradient(155deg, #b8473a 0%, #9A3324 52%, #742116 100%);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(50, 10, 5, .55);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 210, .32),
+      inset 0 -2px 6px rgba(60, 12, 5, .42),
+      0 6px 16px rgba(154, 51, 36, .34);
+  }
+  .bubble-left::before{
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 8px solid #9A3324;
+  }
+
+  .bubble-right{
+    background: var(--um-maize);
+    color: var(--um-blue);
+    box-shadow: 0 6px 16px rgba(255, 203, 5, .22);
+  }
+  .bubble-right::before{
+    content: "";
+    position: absolute;
+    right: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 8px solid var(--um-maize);
+  }
+
+  .caret{
+    display: none;
+    width: 2px;
+    height: 1em;
+    background: currentColor;
+    margin-left: 3px;
+    vertical-align: -.15em;
+    animation: blink .9s steps(1) infinite;
+    opacity: .85;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+
+  /* ---------- 响应区 ---------- */
+  .response-wrap{
+    width: 100%;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .38s cubic-bezier(.3, 1, .4, 1);
+    flex: 0 0 auto;
+  }
+  .response-wrap.open{ grid-template-rows: 1fr; }
+  .response-inner{ overflow: hidden; min-height: 0; width: 100%; }
+
+  .response-area{
+    width: 100%;
+    display: grid;
+    align-items: end;
+  }
+
+  .emoji-layer,
+  .mood-layer{
+    grid-area: 1 / 1;
+    width: 100%;
+    transition: opacity .3s ease, visibility .3s ease;
+  }
+
+  .emoji-layer{
+    align-self: end;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mood-layer{
+    align-self: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .response-area.mood-mode .emoji-layer{
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .response-area.mood-mode .mood-layer{
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .emoji-row{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    padding: var(--gap) 24px 0;
+  }
+
+  .emoji-bubble{
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    border: 1px solid rgba(var(--cool-white), .38);
+    cursor: pointer;
+    font-size: 26px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: rgba(var(--cool-white), .16);
+    color: var(--text);
+    backdrop-filter: blur(10px) saturate(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(130%);
+    box-shadow:
+      0 4px 14px rgba(150, 185, 225, .18),
+      inset 0 1px 0 rgba(255, 255, 255, .28);
+    transition:
+      transform .28s cubic-bezier(.2, .9, .3, 1.2),
+      background .28s ease,
+      border-color .28s ease,
+      box-shadow .28s ease;
+  }
+
+  .emoji-bubble::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(var(--cool-white), .62) 0%,
+      rgba(var(--cool-white), .26) 34%,
+      rgba(var(--cool-white), .06) 58%,
+      rgba(var(--cool-white), 0) 76%
+    );
+    opacity: 0;
+    transition: opacity .22s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .emoji-glyph{ position: relative; z-index: 1; }
+
+  .emoji-bubble:hover{
+    transform: scale(1.07);
+    background: rgba(var(--cool-white), .22);
+    border-color: rgba(var(--cool-white), .70);
+    box-shadow:
+      inset 0 0 18px rgba(var(--cool-white), .38),
+      inset 0 1px 0 rgba(255, 255, 255, .50);
+  }
+
+  .emoji-bubble:hover::after{ opacity: 1; }
+  .emoji-bubble:not(:hover)::after{ transition: opacity .12s ease; }
+  .emoji-bubble:active{ transform: scale(.96); }
+
+  .response-wrap.open .emoji-bubble{
+    animation: emoji-pop .4s cubic-bezier(.3, 1.6, .5, 1) both;
+  }
+  .response-wrap.open .emoji-bubble:nth-child(1){ animation-delay: .02s; }
+  .response-wrap.open .emoji-bubble:nth-child(2){ animation-delay: .09s; }
+  .response-wrap.open .emoji-bubble:nth-child(3){ animation-delay: .16s; }
+  .response-wrap.open .emoji-bubble:nth-child(4){ animation-delay: .23s; }
+
+  @keyframes emoji-pop{
+    0%{ opacity: 0; transform: scale(.4) translateY(6px); }
+    100%{ opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .mood-row{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: var(--gap) 20px 0;
+  }
+
+  /* ==================== Box 2：菜系卡片 ==================== */
+  .cuisine-grid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .cuisine-card{
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    appearance: none;
+    cursor: pointer;
+    border: 1px solid rgba(176, 200, 235, .30);
+    border-radius: 14px;
+    padding: 18px 6px;
+    min-height: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      linear-gradient(155deg,
+        rgba(132, 158, 196, .22) 0%,
+        rgba(52, 70, 96, .30) 55%,
+        rgba(28, 42, 62, .36) 100%);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: .5px;
+    text-align: center;
+    backdrop-filter: blur(9px) saturate(125%);
+    -webkit-backdrop-filter: blur(9px) saturate(125%);
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, .34),
+      inset 0 1px 0 rgba(226, 238, 255, .20),
+      inset 0 -1px 0 rgba(0, 0, 0, .22);
+    transition:
+      transform .26s cubic-bezier(.2, .9, .3, 1.2),
+      background .26s ease,
+      border-color .26s ease,
+      box-shadow .26s ease,
+      color .26s ease,
+      text-shadow .26s ease,
+      opacity .35s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cuisine-card::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(var(--cool-white), .50) 0%,
+      rgba(var(--cool-white), .20) 34%,
+      rgba(var(--cool-white), .04) 58%,
+      rgba(var(--cool-white), 0) 76%
+    );
+    opacity: 0;
+    transition: opacity .22s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .cuisine-name{ position: relative; z-index: 1; }
+
+  .cuisine-card:not(.selected):not(.dimmed):not(.locked):hover{
+    transform: translateY(-3px);
+    background:
+      linear-gradient(155deg,
+        rgba(160, 188, 226, .30) 0%,
+        rgba(70, 92, 122, .34) 55%,
+        rgba(38, 56, 80, .40) 100%);
+    border-color: rgba(196, 216, 245, .62);
+    box-shadow:
+      inset 0 0 20px rgba(var(--cool-white), .20),
+      inset 0 1px 0 rgba(238, 246, 255, .34),
+      0 8px 20px rgba(0, 0, 0, .38);
+  }
+  .cuisine-card:not(.dimmed):not(.locked):hover::after{ opacity: 1; }
+  .cuisine-card:not(:hover)::after{ transition: opacity .12s ease; }
+  .cuisine-card:not(.dimmed):not(.locked):active{ transform: translateY(-1px) scale(.97); }
+
+  .cuisine-card.selected{
+    color: var(--um-blue);
+    text-shadow: none;
+    border-color: rgba(255, 240, 170, .88);
+    background:
+      linear-gradient(135deg,
+        #fffbe3 0%,
+        #ffe97a 14%,
+        #ffcb05 34%,
+        #e0aa00 58%,
+        #b88600 82%,
+        #96690a 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .85),
+      inset 0 -2px 5px rgba(90, 60, 0, .42),
+      inset 0 0 0 1px rgba(255, 236, 150, .55),
+      0 6px 18px rgba(255, 203, 5, .32);
+  }
+
+  .cuisine-card.selected::after{
+    mix-blend-mode: screen;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, .85) 0%,
+      rgba(255, 250, 220, .45) 26%,
+      rgba(255, 245, 200, .12) 52%,
+      rgba(255, 255, 255, 0) 74%
+    );
+  }
+
+  .cuisine-card.selected:not(.dimmed):not(.locked):hover{
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .92),
+      inset 0 -2px 5px rgba(90, 60, 0, .45),
+      inset 0 0 0 1px rgba(255, 240, 170, .70),
+      0 8px 22px rgba(255, 203, 5, .38);
+  }
+  .cuisine-card.selected:not(.dimmed):not(.locked):active{
+    transform: translateY(-1px) scale(.97);
+  }
+
+  .cuisine-card.flash{
+    transform: translateY(-4px) scale(1.05);
+    border-color: #ffffff;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(70, 45, 0, .75);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, .85),
+      inset 0 0 30px rgba(255, 255, 255, .55),
+      0 0 24px rgba(255, 220, 120, .70),
+      0 8px 20px rgba(0, 0, 0, .35);
+  }
+  .cuisine-card.flash::after{
+    opacity: 1;
+    mix-blend-mode: screen;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, .70) 0%,
+      rgba(255, 250, 220, .38) 42%,
+      rgba(255, 255, 255, 0) 78%
+    );
+  }
+
+  .cuisine-card.locked{
+    color: #ffffff;
+    border-color: rgba(255, 168, 148, .75);
+    text-shadow: 0 1px 2px rgba(50, 10, 5, .60);
+    background:
+      linear-gradient(155deg,
+        #b8473a 0%,
+        #9A3324 52%,
+        #742116 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 210, .38),
+      inset 0 -2px 6px rgba(60, 12, 5, .48),
+      inset 0 0 0 1px rgba(255, 170, 150, .30),
+      0 6px 18px rgba(154, 51, 36, .38);
+  }
+  .cuisine-card.locked::after{
+    mix-blend-mode: screen;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, .55) 0%,
+      rgba(255, 226, 214, .24) 32%,
+      rgba(255, 255, 255, 0) 72%
+    );
+  }
+
+  .cuisine-card.dimmed{
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+    border-color: rgba(140, 152, 170, .20);
+    background:
+      linear-gradient(155deg,
+        rgba(62, 72, 88, .26) 0%,
+        rgba(34, 42, 54, .30) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .06),
+      0 3px 10px rgba(0, 0, 0, .22);
+    opacity: .74;
+  }
+  .cuisine-card.dimmed::after{ display: none; }
+  .cuisine-card.dimmed:hover{
+    transform: none;
+    border-color: rgba(140, 152, 170, .20);
+    background:
+      linear-gradient(155deg,
+        rgba(62, 72, 88, .26) 0%,
+        rgba(34, 42, 54, .30) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .06),
+      0 3px 10px rgba(0, 0, 0, .22);
+  }
+
+  .cuisine-grid.randomizing .cuisine-card:not(.dimmed){
+    color: var(--um-blue);
+    text-shadow:
+      0 0 7px rgba(255, 255, 255, .60),
+      0 1px 2px rgba(255, 255, 255, .30);
+  }
+  .cuisine-grid.randomizing .cuisine-card.flash:not(.dimmed){
+    text-shadow: 0 1px 2px rgba(255, 255, 255, .45);
+  }
+
+  .random-wrap{
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows .5s cubic-bezier(.3, 1, .4, 1);
+  }
+  .random-wrap.gone{ grid-template-rows: 0fr; }
+  .random-inner{ overflow: hidden; min-height: 0; width: 100%; }
+  .random-pad{
+    display: flex;
+    justify-content: center;
+    padding-top: var(--gap);
+  }
+
+  /* ==================== Box 3：命运卡片 ==================== */
+  .future-grid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .future-card{
+    position: relative;
+    isolation: isolate;
+    appearance: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    text-align: left;
+    border: 1px solid rgba(176, 200, 235, .28);
+    border-radius: 14px;
+    padding: 16px 14px;
+    min-height: 156px;
+    font-family: inherit;
+    background:
+      linear-gradient(155deg,
+        rgba(132, 158, 196, .20) 0%,
+        rgba(52, 70, 96, .28) 55%,
+        rgba(28, 42, 62, .34) 100%);
+    color: #ffffff;
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, .34),
+      inset 0 1px 0 rgba(226, 238, 255, .18),
+      inset 0 -1px 0 rgba(0, 0, 0, .22);
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(.94) translateY(10px);
+    transition:
+      background .35s ease,
+      border-color .35s ease,
+      box-shadow .35s ease,
+      opacity .4s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .future-card.shown{
+    animation: future-in .9s cubic-bezier(.2, .9, .3, 1.15) forwards;
+    animation-delay: var(--d, 0ms);
+  }
+
+  @keyframes future-in{
+    from{
+      opacity: 0;
+      filter: blur(10px);
+      transform: scale(.94) translateY(10px);
+    }
+    to{
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .future-title{
+    position: relative;
+    z-index: 1;
+    font-size: 13.5px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: .5px;
+    color: var(--um-maize);
+    transition: color .3s ease;
+  }
+
+  .future-text{
+    position: relative;
+    z-index: 1;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: rgba(234, 241, 248, .88);
+    transition: color .3s ease;
+  }
+
+  .future-card:not(.dimmed):not(.locked):hover{
+    border-color: rgba(196, 216, 245, .62);
+    background:
+      linear-gradient(155deg,
+        rgba(160, 188, 226, .28) 0%,
+        rgba(70, 92, 122, .32) 55%,
+        rgba(38, 56, 80, .38) 100%);
+    box-shadow:
+      inset 0 0 22px rgba(var(--cool-white), .16),
+      inset 0 1px 0 rgba(238, 246, 255, .30),
+      0 8px 20px rgba(0, 0, 0, .38);
+  }
+
+  .future-card.locked{
+    border-color: rgba(255, 168, 148, .75);
+    background:
+      linear-gradient(155deg,
+        #b8473a 0%,
+        #9A3324 52%,
+        #742116 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 210, .38),
+      inset 0 -2px 6px rgba(60, 12, 5, .48),
+      inset 0 0 0 1px rgba(255, 170, 150, .30),
+      0 6px 18px rgba(154, 51, 36, .40);
+  }
+  .future-card.locked .future-title{
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(50, 10, 5, .55);
+  }
+  .future-card.locked .future-text{
+    color: rgba(255, 240, 236, .94);
+  }
+
+  .future-card.dimmed{
+    cursor: default;
+    pointer-events: none;
+    border-color: rgba(140, 152, 170, .18);
+    background:
+      linear-gradient(155deg,
+        rgba(58, 68, 84, .22) 0%,
+        rgba(32, 40, 52, .26) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .04),
+      0 2px 8px rgba(0, 0, 0, .18);
+    opacity: .48;
+  }
+  .future-card.dimmed .future-title{
+    color: rgba(168, 180, 196, .68);
+  }
+  .future-card.dimmed .future-text{
+    color: rgba(158, 170, 186, .60);
+  }
+
+  /* ==================== Box 4：记账 ==================== */
+  .budget-panel{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  .avatar-col{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    min-height: 200px;
+    align-self: start;
+  }
+  .avatar-col::before{
+    content: "";
+    position: absolute;
+    width: 92%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      rgba(255, 203, 5, .16) 0%,
+      rgba(255, 203, 5, .05) 45%,
+      rgba(255, 203, 5, 0) 72%);
+    pointer-events: none;
+  }
+
+  .avatar{
+    position: relative;
+    width: 76%;
+    max-width: 104px;
+    height: auto;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, .42));
+    transform-origin: 50% 96%;
+    animation: dance-sway 4.2s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+  .avatar-col:hover .avatar{
+    animation-play-state: running;
+  }
+
+  @keyframes dance-sway{
+    0%, 100%{ transform: rotate(0deg) translateY(0); }
+    25%     { transform: rotate(-4deg) translateY(-3px); }
+    50%     { transform: rotate(0deg) translateY(-1px); }
+    75%     { transform: rotate(4deg) translateY(-3px); }
+  }
+
+  .avatar-arm{
+    transform-box: view-box;
+    animation: arm-swing-l 4.2s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+  .arm-left{ transform-origin: 47px 88px; }
+  .arm-right{
+    transform-origin: 73px 88px;
+    animation-name: arm-swing-r;
+  }
+  .avatar-col:hover .avatar-arm{
+    animation-play-state: running;
+  }
+
+  @keyframes arm-swing-l{
+    0%   { transform: rotate(25deg); }
+    50%  { transform: rotate(-65deg); }
+    100% { transform: rotate(25deg); }
+  }
+  @keyframes arm-swing-r{
+    0%   { transform: rotate(65deg); }
+    50%  { transform: rotate(-25deg); }
+    100% { transform: rotate(65deg); }
+  }
+
+  .avatar-head{
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: head-bob 4.2s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+  .avatar-col:hover .avatar-head{
+    animation-play-state: running;
+  }
+  @keyframes head-bob{
+    0%, 100%{ transform: rotate(0deg); }
+    50%     { transform: rotate(2.5deg); }
+  }
+
+  .avatar-legs{
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+    animation: legs-dance 4.2s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+  .avatar-col:hover .avatar-legs{
+    animation-play-state: running;
+  }
+  @keyframes legs-dance{
+    0%, 100%{ transform: skewX(0deg); }
+    50%     { transform: skewX(3deg); }
+  }
+
+  body.over-budget .avatar,
+  body.over-budget .avatar-head,
+  body.over-budget .avatar-legs{
+    animation-duration: 2.4s;
+  }
+
+  /* 超支时：双臂不再挥动，自然下垂 */
+  body.over-budget .avatar-arm{
+    animation: none;
+    transition: transform .5s cubic-bezier(.3, 1, .4, 1);
+  }
+  body.over-budget .arm-left{ transform: rotate(-107deg); }
+  body.over-budget .arm-right{ transform: rotate(107deg); }
+
+  /* 超支时：手里的哑铃消失 */
+  body.over-budget .avatar-arm .dumbbell-held{ opacity: 0; }
+  .dumbbell-held{ transition: opacity .25s ease; }
+
+  /* 掉在地上的哑铃（和食物 emoji 一样弹跳） */
+  .dumbbell-dropped{
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    transition: opacity .3s ease;
+  }
+  .dumbbell-dropped.db-left{ --db-rot: -9deg; }
+  .dumbbell-dropped.db-right{ --db-rot: 9deg; }
+
+  body.over-budget .dumbbell-dropped{
+    opacity: 1;
+    animation: dumbbell-bounce 1.05s ease-in-out infinite;
+  }
+  body.over-budget .dumbbell-dropped.db-right{
+    animation-duration: 1.25s;
+    animation-delay: -.45s;
+  }
+
+  @keyframes dumbbell-bounce{
+    0%, 100%{ transform: translateY(0) rotate(0deg); }
+    50%     { transform: translateY(-12px) rotate(var(--db-rot, 8deg)); }
+  }
+
+  /* 超支时：笑脸变成向下弯的嘴 */
+  .mouth-sad{ display: none; }
+  body.over-budget .mouth-smile{ display: none; }
+  body.over-budget .mouth-sad{ display: inline; }
+
+  /* 眼泪（超支时显示） */
+  .avatar-tear{
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  body.over-budget .avatar-tear{
+    animation: tear-drop 1.6s ease-in infinite;
+  }
+  body.over-budget .tear-right{ animation-delay: .55s; }
+
+  /* 抚摸小人的脸时暂时擦去眼泪 */
+  body.over-budget.wiping-tears .avatar-tear{
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  @keyframes tear-drop{
+    0%{ opacity: 0; transform: translateY(0); }
+    15%{ opacity: .95; }
+    75%{ opacity: .75; transform: translateY(10px); }
+    100%{ opacity: 0; transform: translateY(15px); }
+  }
+
+  /* 掉落的食物 emoji */
+  .food-anchor{
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .dropped-food{
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 26px;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .45));
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  .dropped-food.dropping{
+    animation: food-drop .85s cubic-bezier(.4, 0, .6, 1) forwards;
+  }
+  @keyframes food-drop{
+    0%{
+      opacity: 0;
+      transform: translate(-50%, -50%) translateY(-170px) rotate(0deg);
+    }
+    12%{ opacity: 1; }
+    82%{
+      transform: translate(-50%, -50%) translateY(3px) rotate(var(--rot, 0deg));
+    }
+    100%{
+      opacity: 1;
+      transform: translate(-50%, -50%) translateY(0) rotate(var(--rot, 0deg));
+    }
+  }
+
+  .dropped-food.landed{
+    transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+  }
+
+  .avatar-col:hover .dropped-food.landed{
+    animation: food-bounce var(--bounce-dur, .9s) ease-in-out infinite;
+    animation-delay: var(--bounce-delay, 0s);
+  }
+  @keyframes food-bounce{
+    0%, 100%{
+      transform: translate(-50%, -50%) translate(var(--bounce-x, 0px), 0) rotate(var(--rot, 0deg));
+    }
+    50%{
+      transform: translate(-50%, -50%) translate(var(--bounce-x, 0px), -11px)
+                 rotate(calc(var(--rot, 0deg) + var(--bounce-rot, 0deg)));
+    }
+  }
+
+  .input-col{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .budget-row{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(176, 200, 235, .16);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: rgba(234, 241, 248, .90);
+  }
+
+  .budget-label{ flex: 0 0 auto; white-space: nowrap; }
+
+  .budget-value{
+    flex: 0 0 auto;
+    font-size: 16px;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    color: var(--um-maize);
+    transition: color .3s ease;
+  }
+
+  body.over-budget .budget-value{ color: #ff8a7a; }
+
+  .budget-unit{
+    flex: 0 0 auto;
+    white-space: nowrap;
+    color: rgba(200, 214, 230, .72);
+    font-weight: 600;
+  }
+
+  .menu-btn{
+    appearance: none;
+    margin-left: auto;
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    border: 1px solid rgba(176, 200, 235, .28);
+    background: rgba(226, 238, 255, .10);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3.5px;
+    padding: 0;
+    transition: background .2s ease, border-color .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-btn span{
+    display: block;
+    width: 14px;
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(234, 241, 248, .78);
+    transition: background .2s ease;
+  }
+  .menu-btn:hover{
+    background: rgba(226, 238, 255, .18);
+    border-color: rgba(196, 216, 245, .55);
+  }
+  .menu-btn.active{
+    background: rgba(255, 203, 5, .18);
+    border-color: rgba(255, 203, 5, .62);
+  }
+  .menu-btn.active span{ background: var(--um-maize); }
+
+  .records-wrap{
+    width: 100%;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .35s cubic-bezier(.3, 1, .4, 1);
+  }
+  .records-wrap.open{ grid-template-rows: 1fr; }
+  .records-inner{ overflow: hidden; min-height: 0; }
+  .records-pad{ padding-top: 2px; }
+
+  .records-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 190px;
+    overflow-y: auto;
+  }
+
+  .records-empty{
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(168, 184, 202, .60);
+    padding: 8px 2px;
+    letter-spacing: .5px;
+  }
+
+  .record-item{
+    background: rgba(226, 238, 255, .07);
+    border: 1px solid rgba(176, 200, 235, .16);
+    border-radius: 10px;
+    padding: 8px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .record-top{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .record-name{
+    font-size: 12.5px;
+    font-weight: 700;
+    color: rgba(240, 246, 252, .95);
+    overflow-wrap: anywhere;
+  }
+
+  .record-price{
+    flex: 0 0 auto;
+    font-size: 12.5px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--um-maize);
+  }
+
+  .record-note{
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: rgba(186, 200, 218, .74);
+    overflow-wrap: anywhere;
+  }
+
+  .record-input,
+  .record-textarea{
+    width: 100%;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    background: rgba(226, 238, 255, .08);
+    border: 1px solid rgba(176, 200, 235, .22);
+    border-radius: 11px;
+    padding: 10px 13px;
+    outline: none;
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+
+  .record-input::placeholder,
+  .record-textarea::placeholder{
+    color: rgba(178, 194, 212, .48);
+    font-weight: 500;
+  }
+
+  .record-input:focus,
+  .record-textarea:focus{
+    border-color: rgba(255, 203, 5, .55);
+    background: rgba(226, 238, 255, .12);
+    box-shadow: 0 0 0 3px rgba(255, 203, 5, .12);
+  }
+
+  .record-textarea{
+    min-height: 76px;
+    resize: vertical;
+    line-height: 1.55;
+  }
+
+  .record-input.invalid{
+    animation: shake .42s ease;
+    border-color: rgba(255, 120, 100, .80);
+    background: rgba(255, 120, 100, .10);
+    box-shadow: 0 0 0 3px rgba(255, 120, 100, .14);
+  }
+
+  @keyframes shake{
+    0%, 100%{ transform: translateX(0); }
+    18%{ transform: translateX(-5px); }
+    38%{ transform: translateX(5px); }
+    58%{ transform: translateX(-3px); }
+    78%{ transform: translateX(3px); }
+  }
+
+  .add-btn{
+    align-self: flex-end;
+    padding: 11px 30px;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  /* ========== 弹窗 ========== */
+  .modal-backdrop{
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: modal-in .22s ease both;
+  }
+  .modal-backdrop[hidden]{ display: none; }
+  @keyframes modal-in{ from{ opacity: 0; } to{ opacity: 1; } }
+
+  .modal{
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--box-bg);
+    border: 1px solid var(--box-border);
+    border-radius: 20px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .06),
+      0 20px 60px rgba(0, 0, 0, .55);
+    animation: modal-slide-in .3s cubic-bezier(.3, 1, .4, 1) both;
+    transition: background .5s ease, border-color .5s ease;
+  }
+  body.over-budget .modal{
+    background: #2a0f0a;
+    border-color: rgba(180, 80, 60, .40);
+  }
+
+  @keyframes modal-slide-in{
+    from{ opacity: 0; transform: translateY(20px) scale(.96); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(176, 200, 235, .16);
+    transition: border-color .5s ease;
+  }
+  body.over-budget .modal-header{ border-bottom-color: rgba(180, 80, 60, .30); }
+
+  .modal-title{
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--um-maize);
+    letter-spacing: .5px;
+    transition: color .5s ease;
+  }
+  body.over-budget .modal-title{ color: #ff9b7d; }
+
+  .modal-close{
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: rgba(234, 241, 248, .70);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 6px;
+    border-radius: 8px;
+    transition: background .2s ease, color .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal-close:hover{ background: rgba(255, 255, 255, .10); color: #fff; }
+
+  .modal-body{
+    padding: 16px 20px 20px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .modal-body h4{
+    margin: 18px 0 10px;
+    font-size: 14px;
+    color: var(--um-maize);
+    font-weight: 800;
+    letter-spacing: .5px;
+  }
+  .modal-body h4:first-child{ margin-top: 0; }
+  body.over-budget .modal-body h4{ color: #ff9b7d; }
+
+  .modal-body p{ margin: 0 0 10px; }
+
+  .modal-hint{
+    margin-top: 14px !important;
+    font-size: 12.5px;
+    color: rgba(200, 214, 230, .72);
+    line-height: 1.6;
+  }
+  body.over-budget .modal-hint{ color: rgba(255, 180, 170, .82); }
+
+  /* 名称编辑 */
+  .form-group{ margin-bottom: 14px; }
+  .form-label{
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: rgba(200, 214, 230, .80);
+    margin-bottom: 6px;
+    letter-spacing: .5px;
+    transition: color .5s ease;
+  }
+  body.over-budget .form-label{ color: rgba(255, 170, 155, .88); }
+
+  .form-input{
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 11px;
+    border: 1px solid rgba(176, 200, 235, .25);
+    background: rgba(226, 238, 255, .08);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .form-input:focus{
+    border-color: rgba(255, 203, 5, .60);
+    background: rgba(226, 238, 255, .12);
+    box-shadow: 0 0 0 3px rgba(255, 203, 5, .14);
+  }
+  body.over-budget .form-input{
+    border-color: rgba(180, 80, 60, .30);
+    background: rgba(255, 155, 125, .06);
+  }
+  body.over-budget .form-input:focus{
+    border-color: rgba(255, 155, 125, .60);
+    box-shadow: 0 0 0 3px rgba(255, 155, 125, .14);
+  }
+
+  .form-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .btn-primary, .btn-secondary{
+    appearance: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease, color .5s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-primary{
+    background: linear-gradient(135deg, #fff4b8 0%, #ffcb05 52%, #d9a400 100%);
+    color: var(--um-blue);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 14px rgba(255,203,5,.28);
+  }
+  .btn-primary:hover{
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 6px 18px rgba(255,203,5,.4);
+  }
+  .btn-primary:active{ transform: scale(.97); }
+  .btn-secondary{
+    background: rgba(226, 238, 255, .08);
+    border-color: rgba(176, 200, 235, .28);
+    color: var(--text);
+  }
+  .btn-secondary:hover{
+    background: rgba(226, 238, 255, .14);
+    border-color: rgba(196, 216, 245, .5);
+  }
+  .btn-secondary:active{ transform: scale(.97); }
+  body.over-budget .btn-secondary{
+    background: rgba(255, 155, 125, .08);
+    border-color: rgba(180, 80, 60, .30);
+    color: #ff9b7d;
+  }
+  body.over-budget .btn-secondary:hover{
+    background: rgba(255, 155, 125, .16);
+    border-color: rgba(200, 100, 80, .5);
+  }
+
+  /* 规则列表 */
+  .rules-list{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .rule-card{
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(226, 238, 255, .06);
+    border: 1px solid rgba(176, 200, 235, .14);
+    transition: background .5s ease, border-color .5s ease;
+  }
+  body.over-budget .rule-card{
+    background: rgba(255, 155, 125, .06);
+    border-color: rgba(180, 80, 60, .20);
+  }
+  .rule-title{
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--um-maize);
+    margin-bottom: 4px;
+    transition: color .5s ease;
+  }
+  body.over-budget .rule-title{ color: #ff9b7d; }
+  .rule-text{
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: rgba(220, 232, 245, .85);
+    transition: color .5s ease;
+  }
+  body.over-budget .rule-text{ color: rgba(255, 210, 200, .85); }
+
+  /* 设置 */
+  .settings-intro{
+    font-size: 12.5px;
+    color: rgba(200, 214, 230, .75);
+    margin-bottom: 14px;
+    line-height: 1.6;
+    transition: color .5s ease;
+  }
+  body.over-budget .settings-intro{ color: rgba(255, 180, 170, .82); }
+
+  .settings-list{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .weight-row{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(226, 238, 255, .05);
+    border: 1px solid rgba(176, 200, 235, .12);
+    transition: background .5s ease, border-color .5s ease;
+  }
+  body.over-budget .weight-row{
+    background: rgba(255, 155, 125, .06);
+    border-color: rgba(180, 80, 60, .20);
+  }
+
+  .weight-info{ min-width: 0; }
+
+  .weight-title{
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: 4px 0;
+    text-align: left;
+    color: var(--um-maize);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    transition: color .5s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body.over-budget .weight-title{ color: #ff9b7d; }
+
+  .weight-title-text{ flex: 1; overflow-wrap: anywhere; }
+
+  .weight-desc{
+    display: none;
+    font-size: 12px;
+    line-height: 1.55;
+    color: rgba(200, 215, 232, .88);
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-left: 2px solid var(--um-maize);
+    background: rgba(255, 203, 5, .06);
+    border-radius: 6px;
+    transition: color .5s ease, border-color .5s ease, background .5s ease;
+  }
+  .weight-desc.shown{ display: block; }
+  body.over-budget .weight-desc{
+    border-left-color: #ff9b7d;
+    background: rgba(255, 155, 125, .06);
+    color: rgba(255, 205, 195, .88);
+  }
+
+  .weight-control{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .weight-btn{
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: 1px solid rgba(176, 200, 235, .28);
+    background: rgba(226, 238, 255, .10);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease, color .5s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .weight-btn:hover{
+    background: rgba(255, 203, 5, .20);
+    border-color: rgba(255, 203, 5, .55);
+    color: var(--um-maize);
+  }
+  .weight-btn:active{ transform: scale(.94); }
+
+  .weight-btn:disabled,
+  .weight-btn:disabled:hover,
+  .weight-btn:disabled:active{
+    cursor: default;
+    pointer-events: none;
+    background: rgba(226, 238, 255, .03);
+    border-color: rgba(176, 200, 235, .10);
+    color: rgba(200, 214, 230, .28);
+    transform: none;
+    box-shadow: none;
+  }
+  body.over-budget .weight-btn:disabled,
+  body.over-budget .weight-btn:disabled:hover,
+  body.over-budget .weight-btn:disabled:active{
+    background: rgba(255, 155, 125, .03);
+    border-color: rgba(180, 80, 60, .12);
+    color: rgba(255, 180, 170, .30);
+  }
+
+  .weight-count{
+    min-width: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--um-maize);
+    transition: color .5s ease;
+  }
+  body.over-budget .weight-count{ color: #ff9b7d; }
+
+  .settings-footer{
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(176, 200, 235, .16);
+    display: flex;
+    justify-content: center;
+    transition: border-color .5s ease;
+  }
+  body.over-budget .settings-footer{ border-top-color: rgba(180, 80, 60, .30); }
+
+  .restart-btn{
+    appearance: none;
+    padding: 12px 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 168, 148, .60);
+    background: linear-gradient(135deg, #b8473a 0%, #9A3324 52%, #742116 100%);
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 210, .30),
+      0 4px 14px rgba(154, 51, 36, .30);
+    transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .restart-btn:hover{
+    filter: brightness(1.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 210, .35),
+      0 6px 18px rgba(154, 51, 36, .40);
+  }
+  .restart-btn:active{ transform: scale(.97); }
+
+  /* ---------- 小屏适配 ---------- */
+  @media (max-width: 520px){
+    :root{
+      --gap: 22px;
+      --box-pad: 20px;
+    }
+
+    .dice-grid{
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding-right: 10px;
+    }
+    .die{ max-width: 72px; }
+    .die-value{ font-size: 22px; }
+    .bubble{ font-size: 14px; padding: 10px 15px; }
+
+    .roll-btn,
+    .random-btn{ padding: 14px 38px; font-size: 15px; }
+
+    .emoji-row{
+      gap: 12px;
+      padding: var(--gap) 18px 0;
+    }
+    .emoji-bubble{ width: 48px; height: 48px; font-size: 23px; border-radius: 14px; }
+
+    .mood-row{ padding: var(--gap) 16px 0; }
+
+    .cuisine-grid{
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+    .cuisine-card{
+      min-height: 84px;
+      padding: 16px 5px;
+      font-size: 12.5px;
+    }
+
+    .future-grid{ gap: 8px; }
+    .future-card{
+      min-height: 148px;
+      padding: 14px 10px;
+      gap: 8px;
+    }
+    .future-title{ font-size: 12px; }
+    .future-text{ font-size: 11px; line-height: 1.55; }
+
+    .budget-panel{
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .avatar-col{
+      height: 170px;
+      min-height: 170px;
+      padding: 6px 0;
+    }
+    .avatar{ max-width: 84px; }
+    .dropped-food{ font-size: 24px; }
+
+    .budget-row{ font-size: 13px; }
+    .budget-value{ font-size: 15px; }
+
+    .record-input,
+    .record-textarea{ font-size: 13px; padding: 9px 12px; }
+
+    .add-btn{ align-self: stretch; }
+
+    .modal{ max-height: 88vh; }
+    .modal-header{ padding: 14px 16px 12px; }
+    .modal-title{ font-size: 16px; }
+    .modal-body{ padding: 14px 16px 18px; }
+    .weight-row{ grid-template-columns: 1fr auto; }
+  }
+  @media (max-width: 480px){
+    .collapsed-summary{
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+  @media (max-width: 380px){
+    .die-value{ font-size: 20px; }
+    .emoji-row{ gap: 10px; }
+
+    .cuisine-grid{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .cuisine-card{
+      min-height: 78px;
+      font-size: 12px;
+    }
+
+    .budget-row{ flex-wrap: wrap; }
+
+    .top-btn{ padding: 6px 12px; font-size: 12px; }
+    .user-id{ font-size: 13px; }
+  }
+  @media (max-width: 340px){
+    .future-grid{ grid-template-columns: 1fr; }
+    .future-card{ min-height: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .emoji-bubble{ transition: none; }
+    .emoji-layer, .mood-layer{ transition: none; }
+    .cuisine-card{ transition: none; }
+    .future-card{ transition: none; }
+    .box.reveal-in{ animation: none; }
+    .future-card.shown{ animation-duration: .01ms; }
+    .avatar, .avatar-arm, .avatar-head, .avatar-legs{ animation: none; }
+    .dropped-food.dropping{ animation-duration: .01ms; }
+    .avatar-col:hover .dropped-food.landed{ animation: none; }
+    body.over-budget .avatar-tear{ animation: none; opacity: .9; }
+    body.over-budget .dumbbell-dropped{ animation: none; opacity: .9; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部横幅：全宽固定，无圆角，囊括 ID + 规则 + 设置 -->
+<div class="banner">
+  <div class="top-bar">
+    <span class="user-id" id="userNameEl" role="button" tabindex="0" title="点击修改名称">爱吃饭的某某</span>
+    <div class="top-buttons">
+      <button class="top-btn" id="rulesBtn" type="button">规则</button>
+      <button class="top-btn" id="settingsBtn" type="button">设置</button>
+    </div>
+  </div>
+</div>
+
+<div class="stack">
+
+  <div class="title-wrap">
+    <h1 class="page-title"><span id="pageTitleText">今天密校吃什么</span></h1>
+  </div>
+
+  <!-- 收起状态下的信息汇总 -->
+  <div class="collapsed-summary" id="collapsedSummary" hidden>
+    <div class="summary-item">
+      <span class="summary-label">初始经费</span>
+      <span class="summary-value" id="summaryBudget">--</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">菜系限制</span>
+      <span class="summary-value" id="summaryCuisine">--</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">彩蛋卡片</span>
+      <span class="summary-value" id="summaryFuture">--</span>
+    </div>
+  </div>
+
+  <button class="collapse-banner" id="collapseBanner" type="button" hidden>
+    <span class="btn-label">展开上方内容</span>
+  </button>
+
+  <!-- ===== Box 1 ===== -->
+  <section class="box" id="box1">
+    <div class="dice-grid" id="diceGrid"></div>
+
+    <button class="roll-btn" id="rollBtn" type="button">
+      <span class="btn-label">投掷</span>
+    </button>
+
+    <div class="bubble-wrap" id="bubbleWrap">
+      <div class="bubble-inner">
+        <div class="bubble-row bubble-row-left">
+          <div class="bubble bubble-left">
+            <span id="bubbleText"></span><span class="caret" id="mealCaret"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="response-wrap" id="responseWrap">
+      <div class="response-inner">
+        <div class="response-area" id="responseArea">
+
+          <div class="emoji-layer" id="emojiLayer">
+            <div class="emoji-row" id="emojiRow"></div>
+          </div>
+
+          <div class="mood-layer" id="moodLayer">
+            <div class="mood-row">
+              <div class="bubble bubble-right">
+                <span id="moodText"></span><span class="caret" id="moodCaret"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Box 2 ===== -->
+  <section class="box" id="box2" hidden>
+    <div class="cuisine-grid" id="cuisineGrid">
+      <button class="cuisine-card" type="button" aria-pressed="false">
+        <span class="cuisine-name">亚洲菜系</span>
+      </button>
+      <button class="cuisine-card" type="button" aria-pressed="false">
+        <span class="cuisine-name">墨西哥菜系</span>
+      </button>
+      <button class="cuisine-card" type="button" aria-pressed="false">
+        <span class="cuisine-name">美式菜系</span>
+      </button>
+      <button class="cuisine-card" type="button" aria-pressed="false">
+        <span class="cuisine-name">清真菜系</span>
+      </button>
+      <button class="cuisine-card" type="button" aria-pressed="false">
+        <span class="cuisine-name">其他菜系</span>
+      </button>
+    </div>
+
+    <div class="random-wrap" id="randomWrap">
+      <div class="random-inner">
+        <div class="random-pad">
+          <button class="random-btn" id="randomBtn" type="button" disabled>
+            <span class="btn-label">开始随机</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Box 3 ===== -->
+  <section class="box" id="box3" hidden>
+    <div class="future-grid" id="futureGrid"></div>
+  </section>
+
+  <!-- ===== Box 4 ===== -->
+  <section class="box" id="box4" hidden>
+    <div class="budget-panel">
+
+      <div class="avatar-col" id="avatarCol">
+        <svg class="avatar" viewBox="0 0 120 180" aria-hidden="true">
+          <g class="avatar-legs">
+            <path d="M52 134 L46 164" stroke="#c98a5e" stroke-width="8" stroke-linecap="round"/>
+            <path d="M68 134 L74 164" stroke="#c98a5e" stroke-width="8" stroke-linecap="round"/>
+            <ellipse cx="44" cy="166" rx="7" ry="3.5" fill="#2b3a4c"/>
+            <ellipse cx="76" cy="166" rx="7" ry="3.5" fill="#2b3a4c"/>
+          </g>
+
+          <g class="avatar-body">
+            <rect x="54" y="68" width="12" height="18" rx="5" fill="#b97a4e"/>
+            <path d="M44 84 L76 84 L88 134 Q60 140 32 134 Z" fill="#3a6ea5"/>
+            <path d="M44 84 Q60 92 76 84" fill="#4b80b8"/>
+            <rect x="44" y="100" width="32" height="4" fill="#2b558a"/>
+          </g>
+
+          <g class="avatar-arm arm-left">
+            <path d="M47 88 L26 66" stroke="#c98a5e" stroke-width="8"
+                  fill="none" stroke-linecap="round"/>
+            <g class="dumbbell-held">
+              <rect x="18" y="64" width="16" height="4" rx="2" fill="#5b6678"/>
+              <rect x="12" y="59" width="6" height="14" rx="2.5" fill="#3b4453"/>
+              <rect x="34" y="59" width="6" height="14" rx="2.5" fill="#3b4453"/>
+            </g>
+          </g>
+          <g class="avatar-arm arm-right">
+            <path d="M73 88 L94 66" stroke="#c98a5e" stroke-width="8"
+                  fill="none" stroke-linecap="round"/>
+            <g class="dumbbell-held">
+              <rect x="86" y="64" width="16" height="4" rx="2" fill="#5b6678"/>
+              <rect x="80" y="59" width="6" height="14" rx="2.5" fill="#3b4453"/>
+              <rect x="102" y="59" width="6" height="14" rx="2.5" fill="#3b4453"/>
+            </g>
+          </g>
+
+          <g class="avatar-head">
+            <circle cx="60" cy="52" r="22" fill="#c98a5e"/>
+
+            <path d="M38 52 Q34 22 60 20 Q86 22 82 52 Q80 38 72 33
+                     Q60 27 48 33 Q40 38 38 52 Z" fill="#c0392b"/>
+            <path d="M40 44 Q48 32 60 34 Q72 32 80 44
+                     Q73 40 60 40 Q47 40 40 44 Z" fill="#d94a38"/>
+            <path d="M38 52 Q35 63 40 74 Q36 60 41 54 Z" fill="#a93226"/>
+            <path d="M82 52 Q85 63 80 74 Q84 60 79 54 Z" fill="#a93226"/>
+
+            <circle cx="52" cy="54" r="2.6" fill="#2c2c2c"/>
+            <circle cx="68" cy="54" r="2.6" fill="#2c2c2c"/>
+            <circle cx="52.9" cy="53.2" r=".85" fill="#ffffff"/>
+            <circle cx="68.9" cy="53.2" r=".85" fill="#ffffff"/>
+
+            <ellipse cx="45" cy="62" rx="3.4" ry="2.4" fill="#e88a6a" opacity=".55"/>
+            <ellipse cx="75" cy="62" rx="3.4" ry="2.4" fill="#e88a6a" opacity=".55"/>
+
+            <path class="mouth-smile" d="M55 64 Q60 69 65 64" stroke="#7a3a22" stroke-width="1.8"
+                  fill="none" stroke-linecap="round"/>
+            <path class="mouth-sad" d="M55 67 Q60 61.5 65 67" stroke="#7a3a22" stroke-width="1.8"
+                  fill="none" stroke-linecap="round"/>
+
+            <ellipse class="avatar-tear tear-left" cx="52" cy="58" rx="2" ry="3" fill="#7ec8f0"/>
+            <ellipse class="avatar-tear tear-right" cx="68" cy="58" rx="2" ry="3" fill="#7ec8f0"/>
+          </g>
+
+          <!-- 掉在地上的哑铃（超支时出现并弹跳） -->
+          <g transform="translate(26, 158)">
+            <g class="dumbbell-dropped db-left">
+              <rect x="-8" y="-2" width="16" height="4" rx="2" fill="#5b6678"/>
+              <rect x="-14" y="-7" width="6" height="14" rx="2.5" fill="#3b4453"/>
+              <rect x="8" y="-7" width="6" height="14" rx="2.5" fill="#3b4453"/>
+            </g>
+          </g>
+          <g transform="translate(94, 158)">
+            <g class="dumbbell-dropped db-right">
+              <rect x="-8" y="-2" width="16" height="4" rx="2" fill="#5b6678"/>
+              <rect x="-14" y="-7" width="6" height="14" rx="2.5" fill="#3b4453"/>
+              <rect x="8" y="-7" width="6" height="14" rx="2.5" fill="#3b4453"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="input-col">
+
+        <div class="budget-row">
+          <span class="budget-label">今日剩余经费:</span>
+          <span class="budget-value" id="budgetValue">--</span>
+          <span class="budget-unit">美元</span>
+          <button class="menu-btn" id="menuBtn" type="button" aria-label="查看今日记录" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+
+        <div class="records-wrap" id="recordsWrap">
+          <div class="records-inner">
+            <div class="records-pad">
+              <ul class="records-list" id="recordsList"></ul>
+            </div>
+          </div>
+        </div>
+
+        <input class="record-input" id="foodName" type="text" placeholder="餐品名称" autocomplete="off">
+
+        <input class="record-input" id="foodPrice" type="text" inputmode="decimal"
+               placeholder="餐品价格" autocomplete="off">
+
+        <textarea class="record-textarea" id="foodNote" placeholder="其他备注"></textarea>
+
+        <button class="add-btn" id="addBtn" type="button">
+          <span class="btn-label">记一笔</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 弹窗 -->
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <button class="modal-close" id="modalCloseBtn" type="button" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+  /* ==================== 常量 & 工具 ==================== */
+  const SIDES = 6;
+  const DICE_COUNT = 6;
+  const rollOne = () => Math.floor(Math.random() * SIDES) + 1;
+
+  const STORAGE_KEY = 'meal-planner-state-v1';
+  const NAME_STORAGE_KEY = 'meal-planner-username-v1';
+  const WEIGHTS_STORAGE_KEY = 'meal-planner-weights-v1';
+  const DEFAULT_USER_NAME = '爱吃饭的某某';
+
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  /* ==================== DOM ==================== */
+  const diceGrid     = document.getElementById('diceGrid');
+  const rollBtn      = document.getElementById('rollBtn');
+  const bubbleWrap   = document.getElementById('bubbleWrap');
+  const bubbleText   = document.getElementById('bubbleText');
+  const mealCaret    = document.getElementById('mealCaret');
+  const responseWrap = document.getElementById('responseWrap');
+  const responseArea = document.getElementById('responseArea');
+  const emojiRow     = document.getElementById('emojiRow');
+  const moodText     = document.getElementById('moodText');
+  const moodCaret    = document.getElementById('moodCaret');
+  const pageTitleText = document.getElementById('pageTitleText');
+
+  const cuisineGrid  = document.getElementById('cuisineGrid');
+  const cuisineCards = Array.from(document.querySelectorAll('.cuisine-card'));
+  const randomBtn    = document.getElementById('randomBtn');
+  const randomWrap   = document.getElementById('randomWrap');
+
+  const futureGrid = document.getElementById('futureGrid');
+
+  const budgetValue = document.getElementById('budgetValue');
+  const menuBtn     = document.getElementById('menuBtn');
+  const recordsWrap = document.getElementById('recordsWrap');
+  const recordsList = document.getElementById('recordsList');
+  const foodName    = document.getElementById('foodName');
+  const foodPrice   = document.getElementById('foodPrice');
+  const foodNote    = document.getElementById('foodNote');
+  const addBtn      = document.getElementById('addBtn');
+  const avatarCol   = document.getElementById('avatarCol');
+  const avatarHead  = avatarCol.querySelector('.avatar-head');
+  const collapseBanner = document.getElementById('collapseBanner');
+  const collapsedSummary = document.getElementById('collapsedSummary');
+  const summaryBudget  = document.getElementById('summaryBudget');
+  const summaryCuisine = document.getElementById('summaryCuisine');
+  const summaryFuture  = document.getElementById('summaryFuture');
+
+  const userNameEl   = document.getElementById('userNameEl');
+  const rulesBtn     = document.getElementById('rulesBtn');
+  const settingsBtn  = document.getElementById('settingsBtn');
+
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalTitle    = document.getElementById('modalTitle');
+  const modalBody     = document.getElementById('modalBody');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+  /* ==================== 全局状态 ==================== */
+  let hasRolled = false;
+  let isRolling = false;
+  let mealTimer = null;
+  let moodTimer = null;
+
+  let diceTotal = 0;
+  let initialBudget = 0;
+  let remaining = 0;
+  let lastBubbleMessage = '';
+  let chosenMoodIdx = null;
+
+  let isAnimating = false;
+  let isFinished  = false;
+  let randomTimer = null;
+
+  let futurePicksIdx = [];
+  let chosenFutureIdx = null;
+  let futureChosen = false;
+
+  let isCollapsed = false;
+  let atBottomOnce = false;
+
+  const records = [];
+
+  let currentDate = todayStr();
+
+  // 跨天保留
+  let userName = DEFAULT_USER_NAME;
+  let futureWeights = [];
+
+  /* ==================== 名称 & 权重读写 ==================== */
+  function loadUserName() {
+    try {
+      const v = localStorage.getItem(NAME_STORAGE_KEY);
+      return v && v.trim() ? v : DEFAULT_USER_NAME;
+    } catch (e) {
+      return DEFAULT_USER_NAME;
+    }
+  }
+
+  function saveUserName(name) {
+    try {
+      localStorage.setItem(NAME_STORAGE_KEY, name);
+    } catch (e) {}
+  }
+
+  function loadWeights() {
+    const fallback = new Array(futures.length).fill(1);
+    try {
+      const raw = localStorage.getItem(WEIGHTS_STORAGE_KEY);
+      if (!raw) return fallback;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length === futures.length) {
+        return arr.map(w => {
+          const n = Number(w);
+          if (!Number.isFinite(n)) return 1;
+          return Math.max(0, Math.min(9, Math.round(n)));
+        });
+      }
+      return fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function saveWeights() {
+    try {
+      localStorage.setItem(WEIGHTS_STORAGE_KEY, JSON.stringify(futureWeights));
+    } catch (e) {}
+  }
+
+  /* ==================== 顺序出现 ==================== */
+  function revealBox(n, scroll = true) {
+    const box = document.getElementById('box' + n);
+    if (!box || !box.hidden) return;
+    box.hidden = false;
+    void box.offsetWidth;
+    box.classList.add('reveal-in');
+    if (scroll) {
+      setTimeout(() => {
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 140);
+    }
+  }
+
+  /* ==================== 跟随鼠标弥散 ==================== */
+  function bindPointerGlow(el) {
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width) * 100;
+      const y = ((e.clientY - r.top) / r.height) * 100;
+      el.style.setProperty('--mx', `${x}%`);
+      el.style.setProperty('--my', `${y}%`);
+    });
+  }
+
+  bindPointerGlow(rollBtn);
+  cuisineCards.forEach(bindPointerGlow);
+  bindPointerGlow(randomBtn);
+  bindPointerGlow(addBtn);
+
+  /* ==================== 抚摸小人的脸，暂时擦去眼泪 ==================== */
+  if (avatarHead) {
+    const wipeOn = () => {
+      if (document.body.classList.contains('over-budget')) {
+        document.body.classList.add('wiping-tears');
+      }
+    };
+    const wipeOff = () => {
+      document.body.classList.remove('wiping-tears');
+    };
+
+    avatarHead.addEventListener('pointerenter', wipeOn);
+    avatarHead.addEventListener('pointerdown', wipeOn);
+    avatarHead.addEventListener('pointermove', (e) => {
+      if (e.buttons > 0) wipeOn();
+    });
+    avatarHead.addEventListener('pointerup', wipeOff);
+    avatarHead.addEventListener('pointerleave', wipeOff);
+    avatarHead.addEventListener('pointercancel', wipeOff);
+  }
+
+  /* ==================== 心情 emoji ==================== */
+  const moods = [
+    { emoji: '🎉', text: '玉盘珍馐，来支持了～' },
+    { emoji: '👌', text: '好的呀没问题。。' },
+    { emoji: '🙄', text: '行…… 真小气' },
+    { emoji: '💨', text: '？？？？？？' }
+  ];
+
+  moods.forEach((m, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'emoji-bubble';
+    btn.innerHTML = `<span class="emoji-glyph">${m.emoji}</span>`;
+    btn.setAttribute('aria-label', `心情：${m.text}`);
+    btn.addEventListener('click', () => selectMood(i));
+    bindPointerGlow(btn);
+    emojiRow.appendChild(btn);
+  });
+
+  function selectMood(idx) {
+    if (chosenMoodIdx !== null) return;
+    chosenMoodIdx = idx;
+    responseArea.classList.add('mood-mode');
+
+    setTimeout(() => {
+      moodTimer = typeText(moodText, moodCaret, moods[idx].text, 55, () => {
+        setTimeout(() => {
+          revealBox(2);
+          saveState();
+        }, 400);
+      });
+    }, 300);
+
+    saveState();
+  }
+
+  /* ==================== 骰子 ==================== */
+  function setDieValue(el, v) {
+    el.textContent = v;
+    el.style.color = v === 1 ? '#ff8a8a' : v >= 4 ? '#FFCB05' : '#8b95a5';
+    el.style.textShadow = v === 1
+      ? '0 0 12px rgba(255,138,138,.35)'
+      : v >= 4
+        ? '0 0 12px rgba(255,203,5,.30)'
+        : 'none';
+  }
+
+  const dieSVG = `
+    <svg class="die-shape" viewBox="0 0 100 100" aria-hidden="true">
+      <polygon class="face-top"   points="20,35 40,15 100,15 80,35"/>
+      <polygon class="face-side"  points="80,35 100,15 100,75 80,95"/>
+      <polygon class="face-front" points="20,35 80,35 80,95 20,95"/>
+      <g stroke="rgba(255,203,5,.20)" stroke-width="1.2" stroke-linejoin="round" fill="none">
+        <polygon points="20,35 40,15 100,15 80,35"/>
+        <polygon points="80,35 100,15 100,75 80,95"/>
+        <polygon points="20,35 80,35 80,95 20,95"/>
+        <line x1="20" y1="35" x2="20" y2="95"/>
+      </g>
+    </svg>
+    <span class="die-value"></span>
+  `;
+
+  const dice = [];
+  for (let i = 0; i < DICE_COUNT; i++) {
+    const die = document.createElement('div');
+    die.className = 'die';
+    die.innerHTML = dieSVG;
+    diceGrid.appendChild(die);
+    setDieValue(die.querySelector('.die-value'), 6);
+    dice.push(die);
+  }
+
+  function animateDie(die, duration) {
+    return new Promise(resolve => {
+      const valueEl = die.querySelector('.die-value');
+      const startTime = performance.now();
+      let lastSwap = 0;
+
+      die.classList.remove('pop');
+      die.classList.add('rolling');
+
+      function frame(now) {
+        if (now - lastSwap >= 50) {
+          setDieValue(valueEl, rollOne());
+          lastSwap = now;
+        }
+        if (now - startTime < duration) {
+          requestAnimationFrame(frame);
+        } else {
+          const final = rollOne();
+          setDieValue(valueEl, final);
+          die.classList.remove('rolling');
+          die.classList.add('pop');
+          resolve(final);
+        }
+      }
+
+      requestAnimationFrame(frame);
+    });
+  }
+
+  function resetBubbles() {
+    if (mealTimer) { clearInterval(mealTimer); mealTimer = null; }
+    if (moodTimer) { clearInterval(moodTimer); moodTimer = null; }
+    bubbleWrap.classList.remove('open');
+    responseWrap.classList.remove('open');
+    responseArea.classList.remove('mood-mode');
+    bubbleText.textContent = '';
+    moodText.textContent = '';
+    mealCaret.style.display = 'none';
+    moodCaret.style.display = 'none';
+  }
+
+  function typeText(el, caret, text, speed, onDone) {
+    el.textContent = '';
+    caret.style.display = 'inline-block';
+    let i = 0;
+    const timer = setInterval(() => {
+      el.textContent = text.slice(0, i + 1);
+      i++;
+      if (i >= text.length) {
+        clearInterval(timer);
+        caret.style.display = 'none';
+        if (onDone) onDone();
+      }
+    }, speed);
+    return timer;
+  }
+
+  async function roll() {
+    if (hasRolled || isRolling) return;
+    hasRolled = true;
+    isRolling = true;
+    rollBtn.disabled = true;
+    rollBtn.classList.add('used');
+    resetBubbles();
+
+    const baseDuration = 620;
+    const stagger = 80;
+
+    const results = await Promise.all(
+      dice.map((die, i) => animateDie(die, baseDuration + i * stagger))
+    );
+    const total = results.reduce((a, b) => a + b, 0);
+
+    diceTotal = total;
+
+    const day = new Date().getDay();
+    const hasBonus = (day === 5 || day === 6 || day === 0);
+    const bonus = hasBonus ? 10 : 0;
+    const budget = total + bonus;
+
+    initialBudget = budget;
+    remaining = budget;
+
+    lastBubbleMessage = hasBonus
+      ? `今日经费：${total}美元 + 10美元津贴 = ${budget}美元`
+      : `今日经费：${total}美元`;
+
+    updateBudgetDisplay();
+    renderRecords();
+    saveState();
+
+    bubbleWrap.classList.add('open');
+    setTimeout(() => {
+      mealTimer = typeText(bubbleText, mealCaret, lastBubbleMessage, 60, () => {
+        setTimeout(() => {
+          responseWrap.classList.add('open');
+          isRolling = false;
+          saveState();
+        }, 300);
+      });
+    }, 380);
+  }
+
+  rollBtn.addEventListener('click', roll);
+
+  /* ==================== Box 2：菜系 ==================== */
+  cuisineCards.forEach((card, i) => {
+    card.addEventListener('click', () => {
+      if (isAnimating || isFinished) return;
+      const on = card.classList.toggle('selected');
+      card.setAttribute('aria-pressed', on ? 'true' : 'false');
+      updateRandomBtn();
+      saveState();
+    });
+  });
+
+  function updateRandomBtn() {
+    const anySelected = cuisineCards.some((c) => c.classList.contains('selected'));
+    randomBtn.disabled = !anySelected;
+  }
+
+  function startRandom() {
+    if (isAnimating || isFinished) return;
+    const pool = cuisineCards.filter((c) => c.classList.contains('selected'));
+    if (pool.length === 0) return;
+
+    isAnimating = true;
+    randomBtn.disabled = true;
+
+    cuisineCards.forEach((c) => {
+      c.style.pointerEvents = 'none';
+    });
+
+    randomWrap.classList.add('gone');
+    cuisineGrid.classList.remove('randomizing');
+
+    /* 只选中一个菜系：跳过随机过程，直接红色锁定 */
+    if (pool.length === 1) {
+      finishRandom(pool);
+      saveState();
+      return;
+    }
+
+    cuisineCards.forEach((c) => {
+      if (!c.classList.contains('selected')) c.classList.add('dimmed');
+    });
+
+    cuisineGrid.classList.add('randomizing');
+    saveState();
+
+    const steps = 12;
+    const fast  = 60;
+    const slow  = 380;
+    let step = 0;
+    let last = null;
+
+    function tick() {
+      if (last) last.classList.remove('flash');
+
+      let pick;
+      if (pool.length > 1) {
+        do { pick = pool[Math.floor(Math.random() * pool.length)]; }
+        while (pick === last);
+      } else {
+        pick = pool[0];
+      }
+
+      pick.classList.add('flash');
+      last = pick;
+      step++;
+
+      if (step >= steps) {
+        last.classList.remove('flash');
+        finishRandom(pool);
+        return;
+      }
+
+      const p = step / steps;
+      const eased = 1 - Math.pow(1 - p, 3);
+      const delay = fast + eased * (slow - fast);
+      randomTimer = setTimeout(tick, delay);
+    }
+
+    tick();
+  }
+
+  function finishRandom(pool) {
+    const winner = pool[Math.floor(Math.random() * pool.length)];
+
+    cuisineCards.forEach((c) => {
+      c.classList.remove('flash');
+      c.classList.add('dimmed');
+    });
+    winner.classList.remove('dimmed');
+    winner.classList.add('locked');
+
+    cuisineGrid.classList.remove('randomizing');
+
+    isAnimating = false;
+    isFinished = true;
+    randomTimer = null;
+
+    setTimeout(() => {
+      if (futureGrid.childElementCount === 0) {
+        futurePicksIdx = pickWeightedIndices(3);
+        renderFutures(futurePicksIdx, true);
+      }
+      revealBox(3);
+      saveState();
+    }, 260);
+  }
+
+  randomBtn.addEventListener('click', startRandom);
+
+  /* ==================== Box 3：命运卡片 ==================== */
+  const futures = [
+    { title: '来自远方的祝福', text: '点外卖时，只计算餐品花销不计算其他费用。' },
+    { title: '家的味道',       text: '只能自己下厨，但采购预算 +50%（共 ___ 美元）。' },
+    { title: '残酷的家',       text: '只能自己下厨，并且不可以食用任何预制菜。采购预算无变化。' },
+    { title: '喜新厌旧',       text: '只能尝试近两个月未吃过的饭店 / 未做过的菜品。' },
+    { title: '燃烧我的卡路里', text: '只能食用标有卡路里，并且卡路里小于 750 的食物。' },
+    { title: '甜蜜蜜',         text: '必须使用至少一半经费购买甜品 / 零食 / 冰淇淋。' },
+    { title: '社交花蝴蝶',     text: '你必须邀请一位熟人一起进食，或必须在饭店与一人搭话闲聊。' },
+    { title: '今晚我就要远航', text: '不能食用 Pierpont Commons / Courtyard / Target 路口 / Joe Pizza 路口的食物。' },
+    { title: '青青草原',       text: '你只能食用素食。' },
+    { title: '以巧克力',       text: '你只能在 happy hour 进食 / 食用当季特色菜单 / 隐藏菜单 / 使用任意折扣。' },
+    { title: '聆听的艺术',     text: '你需要向店员询问推荐菜品，并且进行尝试。若在家吃饭，则需要遵循菜谱做饭。你不能点外卖。' },
+    { title: '寝不言食不语',   text: '你在吃饭时不可以使用手机。' },
+    { title: '感恩有你',       text: '今日你的所有小费必须给 18% 以上，并且计入花销。' },
+    { title: '手握这个世界',   text: '今日你吃饭时全程不允许用任何叉子、勺子或筷子。' },
+    { title: '绿叶菜',         text: '今天你必须吃一道以绿叶菜为主的食物。' },
+    { title: '步行主义者',     text: '今日你不能点外卖，也不能骑车 / 打车前往饭馆或买菜。' },
+    { title: '我爱我校',       text: '今天你只能吃可以用校园卡付款的饭店。' },
+    { title: '蛋蛋大作战',     text: '今天你必须食用至少一个鸡蛋。' },
+    { title: '最好运的小羊',   text: '今天如果前往饭店吃饭，只能点菜单每个类别的第一道菜或最后一道菜。' }
+  ];
+
+  /* 加权不放回抽 3 张（每张卡权重为池中份数） */
+  function pickWeightedIndices(n) {
+    const pool = futureWeights
+      .map((w, i) => ({ i, w }))
+      .filter(x => x.w > 0);
+
+    if (pool.length === 0) {
+      // 全部为 0：退化回均匀随机
+      return pickUniformIndices(n);
+    }
+
+    const result = [];
+    while (result.length < n && pool.length > 0) {
+      const total = pool.reduce((s, x) => s + x.w, 0);
+      let r = Math.random() * total;
+      let idx = pool.length - 1;
+      for (let j = 0; j < pool.length; j++) {
+        r -= pool[j].w;
+        if (r < 0) { idx = j; break; }
+      }
+      result.push(pool[idx].i);
+      pool.splice(idx, 1);
+    }
+
+    // 若池中不足 n 种，则从剩余卡中均匀补充
+    if (result.length < n) {
+      const rest = [];
+      for (let i = 0; i < futures.length; i++) {
+        if (!result.includes(i)) rest.push(i);
+      }
+      for (let i = rest.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [rest[i], rest[j]] = [rest[j], rest[i]];
+      }
+      while (result.length < n && rest.length > 0) {
+        result.push(rest.pop());
+      }
+    }
+
+    return result;
+  }
+
+  function pickUniformIndices(n) {
+    const arr = Array.from({ length: futures.length }, (_, i) => i);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr.slice(0, n);
+  }
+
+  function renderFutures(indices, animate = true) {
+    if (futureGrid.childElementCount > 0) return;
+    futureGrid.innerHTML = '';
+
+    indices.forEach((idx, i) => {
+      const item = futures[idx];
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'future-card';
+      card.dataset.idx = idx;
+      if (animate) card.style.setProperty('--d', `${i * 190}ms`);
+
+      const titleEl = document.createElement('span');
+      titleEl.className = 'future-title';
+      titleEl.textContent = item.title;
+
+      const textEl = document.createElement('span');
+      textEl.className = 'future-text';
+      textEl.textContent = item.text;
+
+      card.appendChild(titleEl);
+      card.appendChild(textEl);
+      card.addEventListener('click', () => chooseFuture(card, idx));
+      futureGrid.appendChild(card);
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        futureGrid.querySelectorAll('.future-card').forEach((c) => c.classList.add('shown'));
+      });
+    });
+  }
+
+  function chooseFuture(card, idx) {
+    if (futureChosen) return;
+    futureChosen = true;
+    chosenFutureIdx = idx;
+
+    futureGrid.querySelectorAll('.future-card').forEach((c) => {
+      if (c === card) c.classList.add('locked');
+      else c.classList.add('dimmed');
+    });
+
+    saveState();
+    setTimeout(() => {
+      revealBox(4);
+      saveState();
+    }, 320);
+  }
+
+  /* ==================== Box 4：记账 ==================== */
+  const FOOD_EMOJIS = ['🍕','🍔','🌮','🍜','🍣','🍩','🍦','🥗','🍗','🍟',
+                       '🍱','🍝','🍫','🍎','🥪','🍤','🧁','🍙','🥟','🍇'];
+
+  function dropFoodEmoji() {
+    const svg = avatarCol.querySelector('.avatar');
+    if (!svg) return;
+
+    const colRect = avatarCol.getBoundingClientRect();
+    const svgRect = svg.getBoundingClientRect();
+    if (!svgRect.width || !svgRect.height) return;
+
+    const cx = (svgRect.left - colRect.left) + svgRect.width  * (60 / 120);
+    const cy = (svgRect.top  - colRect.top)  + svgRect.height * (166 / 180);
+
+    const rx = svgRect.width  * 0.34;
+    const ry = svgRect.height * 0.055;
+
+    const existing = [];
+    avatarCol.querySelectorAll('.food-anchor').forEach(a => {
+      const x = parseFloat(a.style.left);
+      const y = parseFloat(a.style.top);
+      if (!isNaN(x) && !isNaN(y)) existing.push({ x, y });
+    });
+
+    const isFirstFour = existing.length < 4;
+    const minDist = 30;
+    const maxAttempts = 30;
+
+    let px, py;
+    let attempts = 0;
+
+    do {
+      const ang = Math.random() * Math.PI * 2;
+      const rad = Math.sqrt(Math.random());
+      px = cx + Math.cos(ang) * rx * rad;
+      py = cy + Math.sin(ang) * ry * rad;
+      attempts++;
+
+      if (!isFirstFour) break;
+      if (!existing.some(p => {
+        const dx = px - p.x;
+        const dy = py - p.y;
+        return Math.sqrt(dx * dx + dy * dy) < minDist;
+      })) break;
+    } while (attempts < maxAttempts);
+
+    const anchor = document.createElement('span');
+    anchor.className = 'food-anchor';
+    anchor.style.left = `${px}px`;
+    anchor.style.top  = `${py}px`;
+
+    const span = document.createElement('span');
+    span.className = 'dropped-food dropping';
+    span.textContent = FOOD_EMOJIS[Math.floor(Math.random() * FOOD_EMOJIS.length)];
+
+    span.style.setProperty('--rot', `${(Math.random() * 50 - 25).toFixed(1)}deg`);
+    span.style.setProperty('--bounce-dur', `${(0.55 + Math.random() * 1.0).toFixed(2)}s`);
+    span.style.setProperty('--bounce-delay', `${(Math.random() * 0.7).toFixed(2)}s`);
+    span.style.setProperty('--bounce-x', `${(Math.random() * 16 - 8).toFixed(1)}px`);
+    span.style.setProperty('--bounce-rot', `${(Math.random() * 30 - 15).toFixed(1)}deg`);
+
+    span.addEventListener('animationiteration', (e) => {
+      if (e.animationName !== 'food-bounce') return;
+      span.style.setProperty('--bounce-x', `${(Math.random() * 16 - 8).toFixed(1)}px`);
+      span.style.setProperty('--bounce-rot', `${(Math.random() * 30 - 15).toFixed(1)}deg`);
+    });
+
+    anchor.appendChild(span);
+    avatarCol.appendChild(anchor);
+
+    span.addEventListener('animationend', (e) => {
+      if (e.animationName !== 'food-drop') return;
+      if (!span.classList.contains('dropping')) return;
+      span.classList.remove('dropping');
+      span.classList.add('landed');
+    }, { once: true });
+
+    const all = avatarCol.querySelectorAll('.food-anchor');
+    if (all.length > 16) {
+      all[0].remove();
+    }
+  }
+
+  function updateBudgetDisplay() {
+    budgetValue.textContent = remaining.toFixed(2);
+    document.body.classList.toggle('over-budget', remaining < 0);
+    if (remaining >= 0) {
+      document.body.classList.remove('wiping-tears');
+    }
+    pageTitleText.textContent = remaining < 0 ? '今天你又乱吃饭' : '今天密校吃什么';
+  }
+
+  function renderRecords() {
+    recordsList.innerHTML = '';
+
+    if (records.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'records-empty';
+      li.textContent = '快去吃饭吧';
+      recordsList.appendChild(li);
+      return;
+    }
+
+    records.forEach((r) => {
+      const li = document.createElement('li');
+      li.className = 'record-item';
+
+      const top = document.createElement('div');
+      top.className = 'record-top';
+
+      const name = document.createElement('span');
+      name.className = 'record-name';
+      name.textContent = r.name;
+
+      const price = document.createElement('span');
+      price.className = 'record-price';
+      price.textContent = `$${r.price.toFixed(2)}`;
+
+      top.appendChild(name);
+      top.appendChild(price);
+      li.appendChild(top);
+
+      if (r.note) {
+        const note = document.createElement('div');
+        note.className = 'record-note';
+        note.textContent = r.note;
+        li.appendChild(note);
+      }
+
+      recordsList.appendChild(li);
+    });
+  }
+
+  menuBtn.addEventListener('click', () => {
+    const open = recordsWrap.classList.toggle('open');
+    menuBtn.classList.toggle('active', open);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  function markInvalid(el) {
+    el.classList.remove('invalid');
+    void el.offsetWidth;
+    el.classList.add('invalid');
+    el.focus();
+    setTimeout(() => el.classList.remove('invalid'), 600);
+  }
+
+  addBtn.addEventListener('click', () => {
+    const name = foodName.value.trim();
+    const rawPrice = foodPrice.value.trim();
+    const note = foodNote.value.trim();
+
+    if (!name) { markInvalid(foodName); return; }
+
+    const n = Number(rawPrice);
+    if (rawPrice === '' || !Number.isFinite(n) || n <= 0) {
+      markInvalid(foodPrice);
+      return;
+    }
+
+    const price = Number(n.toFixed(2));
+
+    records.push({ name, price, note });
+    remaining = Number((remaining - price).toFixed(2));
+
+    foodName.value = '';
+    foodPrice.value = '';
+    foodNote.value = '';
+
+    updateBudgetDisplay();
+    renderRecords();
+    dropFoodEmoji();
+    saveState();
+
+    foodName.focus();
+  });
+
+  /* ==================== 收起 / 展开 ==================== */
+  function isBox4Visible() {
+    const box4 = document.getElementById('box4');
+    return box4 && !box4.hidden;
+  }
+
+  function isAtBottom() {
+    return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 5;
+  }
+
+  function updateCollapsedSummary() {
+    summaryBudget.textContent = initialBudget > 0
+      ? `$${initialBudget.toFixed(2)}`
+      : '--';
+
+    const lockedCard = cuisineCards.find(c => c.classList.contains('locked'));
+    summaryCuisine.textContent = lockedCard
+      ? lockedCard.querySelector('.cuisine-name').textContent
+      : '--';
+
+    if (chosenFutureIdx !== null && futures[chosenFutureIdx]) {
+      summaryFuture.textContent = futures[chosenFutureIdx].title;
+      summaryFuture.classList.add('clickable');
+      summaryFuture.setAttribute('role', 'button');
+      summaryFuture.setAttribute('tabindex', '0');
+      summaryFuture.title = '点击查看这张彩蛋卡片的说明';
+    } else {
+      summaryFuture.textContent = '--';
+      summaryFuture.classList.remove('clickable');
+      summaryFuture.removeAttribute('role');
+      summaryFuture.removeAttribute('tabindex');
+      summaryFuture.removeAttribute('title');
+    }
+  }
+
+  /* 折叠后点击彩蛋卡片名 → 小弹窗介绍 */
+  function openFutureInfoModal() {
+    if (chosenFutureIdx === null) return;
+    const f = futures[chosenFutureIdx];
+    if (!f) return;
+    openModal('今日彩蛋卡片', `
+      <h4>${f.title}</h4>
+      <p>${f.text}</p>
+      <p class="modal-hint">这是你今天抽到的限定规则，需要在今天的一日三餐中遵守它。</p>
+    `);
+  }
+
+  summaryFuture.addEventListener('click', openFutureInfoModal);
+  summaryFuture.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openFutureInfoModal();
+    }
+  });
+
+  function collapseBoxes() {
+    if (isCollapsed) return;
+    if (!isBox4Visible()) return;
+    isCollapsed = true;
+    ['box1', 'box2', 'box3'].forEach(id => {
+      document.getElementById(id).classList.add('collapsed');
+    });
+    updateCollapsedSummary();
+    collapsedSummary.hidden = false;
+    collapseBanner.hidden = false;
+    atBottomOnce = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function expandBoxes() {
+    if (!isCollapsed) return;
+    isCollapsed = false;
+    ['box1', 'box2', 'box3'].forEach(id => {
+      document.getElementById(id).classList.remove('collapsed');
+    });
+    collapsedSummary.hidden = true;
+    collapseBanner.hidden = true;
+    atBottomOnce = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleDownIntent() {
+    if (isCollapsed) return;
+    if (!isBox4Visible()) return;
+    if (isAtBottom()) {
+      if (atBottomOnce) {
+        collapseBoxes();
+      } else {
+        atBottomOnce = true;
+      }
+    } else {
+      atBottomOnce = false;
+    }
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0) {
+      handleDownIntent();
+    } else {
+      atBottomOnce = false;
+    }
+  }, { passive: true });
+
+  let touchStartY = 0;
+  let touchAtBottomAtStart = false;
+
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+    touchAtBottomAtStart = isAtBottom();
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (isCollapsed) return;
+    if (!isBox4Visible()) return;
+    const currentY = e.touches[0].clientY;
+    const deltaY = touchStartY - currentY;
+    if (deltaY > 20 && touchAtBottomAtStart) {
+      collapseBoxes();
+    }
+    if (deltaY < -20) {
+      touchAtBottomAtStart = false;
+    }
+  }, { passive: true });
+
+  collapseBanner.addEventListener('click', expandBoxes);
+
+  /* ==================== 弹窗基础 ==================== */
+  function openModal(title, bodyHTML) {
+    modalTitle.textContent = title;
+    modalBody.innerHTML = bodyHTML;
+    modalBackdrop.hidden = false;
+  }
+
+  function closeModal() {
+    modalBackdrop.hidden = true;
+    modalBody.innerHTML = '';
+    modalBody.onclick = null;
+  }
+
+  modalCloseBtn.addEventListener('click', closeModal);
+
+  modalBackdrop.addEventListener('click', (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modalBackdrop.hidden) closeModal();
+  });
+
+  /* ==================== 修改名称弹窗 ==================== */
+  function openNameModal() {
+    openModal('修改名称', `
+      <div class="form-group">
+        <label class="form-label">你的名称</label>
+        <input class="form-input" id="nameInput" type="text" maxlength="20" placeholder="请输入名称">
+      </div>
+      <div class="form-actions">
+        <button class="btn-secondary" id="nameCancelBtn" type="button">取消</button>
+        <button class="btn-primary" id="nameSaveBtn" type="button">保存</button>
+      </div>
+    `);
+
+    const input = document.getElementById('nameInput');
+    input.value = userName;
+
+    document.getElementById('nameCancelBtn').onclick = closeModal;
+    document.getElementById('nameSaveBtn').onclick = () => {
+      const v = input.value.trim();
+      if (v) {
+        userName = v;
+        saveUserName(v);
+        userNameEl.textContent = v;
+      }
+      closeModal();
+    };
+
+    setTimeout(() => { input.focus(); input.select(); }, 80);
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('nameSaveBtn').click();
+      }
+    });
+  }
+
+  userNameEl.addEventListener('click', openNameModal);
+  userNameEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openNameModal();
+    }
+  });
+
+  /* ==================== 规则弹窗 ==================== */
+  function openRulesModal() {
+    let html = '';
+    html += `<h4>玩法说明</h4>`;
+    html += `<p>1. 点击「投掷」获得今日经费（6 个骰子点数之和）。周五、周六、周日会额外获得 10 美元津贴。</p>`;
+    html += `<p>2. 选择你愿意接受的菜系，点击「开始随机」抽取最终菜系。</p>`;
+    html += `<p>3. 从 3 张命运卡片中选择一张作为今日限定规则。</p>`;
+    html += `<p>4. 在记账区记录每一笔花销，超出经费后页面会变红，小人也会掉眼泪。</p>`;
+    html += `<p>5. 记账区出现后，一路向下滑动到页面底部，再继续向下滑一下，上方内容就会自动折叠成一条汇总条；点击「展开上方内容」即可恢复。折叠之后，点击汇总条里的彩蛋卡片名字，可以再次查看这张卡片的说明。</p>`;
+    html += `<h4>全部命运卡片（${futures.length} 张）</h4>`;
+    html += `<div class="rules-list">`;
+    futures.forEach((f) => {
+      html += `
+        <div class="rule-card">
+          <div class="rule-title">${f.title}</div>
+          <div class="rule-text">${f.text}</div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    openModal('规则', html);
+  }
+
+  rulesBtn.addEventListener('click', openRulesModal);
+
+  /* ==================== 设置弹窗 ==================== */
+  function openSettingsModal() {
+    let html = '';
+    html += `<div class="settings-intro">调整每张命运卡片在抽取池中的份数（0–9）。份数为 0 的卡片不会被抽中；份数越多，被抽中的概率越高。</div>`;
+    html += `<div class="settings-list">`;
+    futures.forEach((f, i) => {
+      const w = futureWeights[i];
+      html += `
+        <div class="weight-row">
+          <div class="weight-info">
+            <button class="weight-title" type="button" data-idx="${i}">
+              <span class="weight-title-text">${f.title}</span>
+            </button>
+            <div class="weight-desc" data-idx="${i}">${f.text}</div>
+          </div>
+          <div class="weight-control">
+            <button class="weight-btn" type="button" data-idx="${i}" data-delta="-1" aria-label="减少"${w <= 0 ? ' disabled' : ''}>−</button>
+            <span class="weight-count" data-idx="${i}">${w}</span>
+            <button class="weight-btn" type="button" data-idx="${i}" data-delta="1" aria-label="增加"${w >= 9 ? ' disabled' : ''}>+</button>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    html += `
+      <div class="settings-footer">
+        <button class="restart-btn" type="button" id="restartBtn">重新开始今日</button>
+      </div>
+    `;
+    openModal('设置', html);
+    bindSettingsHandlers();
+  }
+
+  function bindSettingsHandlers() {
+    const body = modalBody;
+
+    /* 用 onclick 覆盖式绑定，避免重复打开设置时监听器累积导致一次点击加减多次 */
+    body.onclick = (e) => {
+      const btn = e.target.closest('.weight-btn');
+      if (btn) {
+        e.stopPropagation();
+        if (btn.disabled) return;
+
+        const idx = Number(btn.dataset.idx);
+        const delta = Number(btn.dataset.delta);
+        const cur = futureWeights[idx];
+        const next = delta < 0 ? cur - 1 : cur + 1;
+
+        if (next < 0 || next > 9) return;
+
+        futureWeights[idx] = next;
+
+        const countEl = body.querySelector(`.weight-count[data-idx="${idx}"]`);
+        if (countEl) countEl.textContent = next;
+
+        const minusBtn = body.querySelector(`.weight-btn[data-idx="${idx}"][data-delta="-1"]`);
+        const plusBtn  = body.querySelector(`.weight-btn[data-idx="${idx}"][data-delta="1"]`);
+        if (minusBtn) minusBtn.disabled = next <= 0;
+        if (plusBtn)  plusBtn.disabled  = next >= 9;
+
+        saveWeights();
+        return;
+      }
+
+      const title = e.target.closest('.weight-title');
+      if (title) {
+        e.stopPropagation();
+        const idx = Number(title.dataset.idx);
+        const descs = body.querySelectorAll('.weight-desc');
+        const target = descs[idx];
+        const wasOpen = target && target.classList.contains('shown');
+        descs.forEach(d => d.classList.remove('shown'));
+        if (target && !wasOpen) {
+          target.classList.add('shown');
+        }
+        return;
+      }
+
+      if (!e.target.closest('.weight-desc')) {
+        body.querySelectorAll('.weight-desc').forEach(d => d.classList.remove('shown'));
+      }
+    };
+
+    const restartBtn = document.getElementById('restartBtn');
+    if (restartBtn) {
+      restartBtn.onclick = () => {
+        closeModal();
+        resetAll();
+      };
+    }
+  }
+
+  settingsBtn.addEventListener('click', openSettingsModal);
+
+  /* ==================== 全部重置（跨天 / 重新开始） ==================== */
+  function resetAll() {
+    if (mealTimer) { clearInterval(mealTimer); mealTimer = null; }
+    if (moodTimer) { clearInterval(moodTimer); moodTimer = null; }
+    if (randomTimer) { clearTimeout(randomTimer); randomTimer = null; }
+
+    hasRolled = false;
+    isRolling = false;
+    diceTotal = 0;
+    initialBudget = 0;
+    remaining = 0;
+    lastBubbleMessage = '';
+    chosenMoodIdx = null;
+    isAnimating = false;
+    isFinished = false;
+    futurePicksIdx = [];
+    chosenFutureIdx = null;
+    futureChosen = false;
+    isCollapsed = false;
+    atBottomOnce = false;
+    records.length = 0;
+
+    document.body.classList.remove('wiping-tears');
+
+    dice.forEach(die => {
+      setDieValue(die.querySelector('.die-value'), 6);
+      die.classList.remove('rolling', 'pop');
+    });
+
+    rollBtn.disabled = false;
+    rollBtn.classList.remove('used');
+
+    resetBubbles();
+
+    cuisineCards.forEach(c => {
+      c.classList.remove('selected', 'locked', 'dimmed', 'flash');
+      c.setAttribute('aria-pressed', 'false');
+      c.style.pointerEvents = '';
+    });
+    cuisineGrid.classList.remove('randomizing');
+    randomWrap.classList.remove('gone');
+    randomBtn.disabled = true;
+
+    futureGrid.innerHTML = '';
+
+    recordsList.innerHTML = '';
+    foodName.value = '';
+    foodPrice.value = '';
+    foodNote.value = '';
+    recordsWrap.classList.remove('open');
+    menuBtn.classList.remove('active');
+    menuBtn.setAttribute('aria-expanded', 'false');
+
+    avatarCol.querySelectorAll('.food-anchor').forEach(a => a.remove());
+
+    ['box2', 'box3', 'box4'].forEach(id => {
+      const box = document.getElementById(id);
+      box.hidden = true;
+      box.classList.remove('reveal-in');
+    });
+    ['box1', 'box2', 'box3'].forEach(id => {
+      document.getElementById(id).classList.remove('collapsed');
+    });
+
+    collapsedSummary.hidden = true;
+    collapseBanner.hidden = true;
+
+    updateBudgetDisplay();
+    renderRecords();
+
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function checkDateChange() {
+    const now = todayStr();
+    if (now !== currentDate) {
+      currentDate = now;
+      resetAll();
+    }
+  }
+
+  setInterval(checkDateChange, 30000);
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) checkDateChange();
+  });
+
+  window.addEventListener('focus', checkDateChange);
+
+  /* ==================== 本地状态 ==================== */
+  function saveState() {
+    const diceValues = hasRolled
+      ? dice.map((d) => Number(d.querySelector('.die-value').textContent))
+      : [];
+
+    const lockedIdx = cuisineCards.findIndex((c) => c.classList.contains('locked'));
+
+    const state = {
+      date: todayStr(),
+      rolled: hasRolled,
+      diceValues,
+      total: diceTotal,
+      budget: initialBudget,
+      remaining,
+      bubbleMessage: lastBubbleMessage,
+      records,
+      box2Visible: !document.getElementById('box2').hidden,
+      cuisineSelected: cuisineCards
+        .map((c, i) => (c.classList.contains('selected') ? i : -1))
+        .filter((i) => i >= 0),
+      cuisineLocked: lockedIdx >= 0 ? lockedIdx : null,
+      box3Visible: !document.getElementById('box3').hidden,
+      futurePicks: futurePicksIdx,
+      futureChosen: chosenFutureIdx,
+      box4Visible: !document.getElementById('box4').hidden,
+      moodChosen: chosenMoodIdx
+    };
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const s = JSON.parse(raw);
+      if (!s || s.date !== todayStr()) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+      return s;
+    } catch (e) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+  }
+
+  function restoreState(s) {
+    if (s.rolled) {
+      if (Array.isArray(s.diceValues) && s.diceValues.length === DICE_COUNT) {
+        s.diceValues.forEach((v, i) => {
+          if (dice[i]) setDieValue(dice[i].querySelector('.die-value'), v);
+        });
+      }
+
+      hasRolled = true;
+      rollBtn.disabled = true;
+      rollBtn.classList.add('used');
+
+      diceTotal = s.total || 0;
+      initialBudget = s.budget || 0;
+      remaining = typeof s.remaining === 'number' ? s.remaining : initialBudget;
+      lastBubbleMessage = s.bubbleMessage || '';
+
+      updateBudgetDisplay();
+
+      if (Array.isArray(s.records)) {
+        records.length = 0;
+        records.push(...s.records);
+      }
+      renderRecords();
+
+      if (lastBubbleMessage) {
+        bubbleText.textContent = lastBubbleMessage;
+      }
+      bubbleWrap.classList.add('open');
+      responseWrap.classList.add('open');
+
+      if (s.moodChosen !== null && s.moodChosen !== undefined) {
+        chosenMoodIdx = s.moodChosen;
+        responseArea.classList.add('mood-mode');
+        moodText.textContent = moods[s.moodChosen].text;
+      }
+    }
+
+    if (s.box2Visible) {
+      if (Array.isArray(s.cuisineSelected)) {
+        s.cuisineSelected.forEach((i) => {
+          if (cuisineCards[i]) {
+            cuisineCards[i].classList.add('selected');
+            cuisineCards[i].setAttribute('aria-pressed', 'true');
+          }
+        });
+      }
+
+      if (s.cuisineLocked !== null && s.cuisineLocked !== undefined) {
+        isFinished = true;
+        cuisineCards.forEach((c, i) => {
+          if (i === s.cuisineLocked) c.classList.add('locked');
+          else c.classList.add('dimmed');
+          c.style.pointerEvents = 'none';
+        });
+        randomWrap.classList.add('gone');
+      } else {
+        updateRandomBtn();
+      }
+
+      revealBox(2, false);
+    }
+
+    if (s.box3Visible && Array.isArray(s.futurePicks) && s.futurePicks.length) {
+      futurePicksIdx = s.futurePicks.slice();
+      renderFutures(futurePicksIdx, true);
+
+      if (s.futureChosen !== null && s.futureChosen !== undefined) {
+        chosenFutureIdx = s.futureChosen;
+        futureChosen = true;
+        futureGrid.querySelectorAll('.future-card').forEach((c) => {
+          if (Number(c.dataset.idx) === s.futureChosen) c.classList.add('locked');
+          else c.classList.add('dimmed');
+        });
+      }
+
+      revealBox(3, false);
+    }
+
+    if (s.box4Visible) {
+      revealBox(4, false);
+    }
+  }
+
+  /* ==================== 初始化 ==================== */
+  (function init() {
+    currentDate = todayStr();
+
+    // 跨天保留：名称 / 权重
+    userName = loadUserName();
+    userNameEl.textContent = userName;
+
+    futureWeights = loadWeights();
+
+    const saved = loadState();
+    if (saved) {
+      restoreState(saved);
+    } else {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      updateBudgetDisplay();
+      renderRecords();
+    }
+  })();
+</script>
+
+</body>
+</html>
